@@ -149,7 +149,8 @@
                 android:layout_marginEnd="16dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/social_btn_backgrount"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/facebookLoginLayout">
 
                 <ImageView
                     android:id="@+id/FBLoginImg"
@@ -177,7 +178,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_weight="0.5"
                 android:background="@drawable/social_btn_backgrount"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/googleLoginLayout">
 
                 <ImageView
                     android:id="@+id/imageView3"
