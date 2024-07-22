@@ -56,7 +56,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="Sudheera Dasun"
+                        android:text="Sudheera dasun"
                         android:textColor="@color/white"
                         android:textSize="27sp"
                         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
