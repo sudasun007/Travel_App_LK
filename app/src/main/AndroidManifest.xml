@@ -79,6 +79,9 @@
             android:name=".Activities.BookingDetailsActivity"
             android:exported="true"/>
 
+        <activity android:name=".Activities.SettingsActivity" />
+
+
 
 
 

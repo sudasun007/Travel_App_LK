@@ -91,6 +91,7 @@ public class ActivityLogin extends AppCompatActivity {
         });
 
         backBtm.setOnClickListener(v -> finish());
+
     }
 
     private void login() {
@@ -105,7 +106,10 @@ public class ActivityLogin extends AppCompatActivity {
         if (databaseHelper.checkUser(email, password)) {
             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
             saveUserEmailToSharedPreferences(email);
-            startActivity(new Intent(ActivityLogin.this, MainActivity.class));
+            Intent intent = new Intent(ActivityLogin.this, MainActivity.class);
+            intent.putExtra("USER_EMAIL", email); // Pass the email to MainActivity
+            startActivity(intent);
+            finish(); // Optional: close the LoginActivity so the user cannot navigate back to it
         } else {
             Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
         }
@@ -146,7 +150,10 @@ public class ActivityLogin extends AppCompatActivity {
     private void handleFacebookAccessToken(AccessToken token) {
         Toast.makeText(this, "Facebook Login Successful", Toast.LENGTH_SHORT).show();
         // Handle the access token to fetch user details or authenticate with your backend
-        startActivity(new Intent(ActivityLogin.this, MainActivity.class));
+        Intent intent = new Intent(ActivityLogin.this, MainActivity.class);
+        intent.putExtra("USER_EMAIL", token.getUserId()); // Assuming user ID for now
+        startActivity(intent);
+        finish(); // Optional
     }
 
     @Override
@@ -165,7 +172,10 @@ public class ActivityLogin extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             Toast.makeText(this, "Google Login Successful", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(ActivityLogin.this, MainActivity.class));
+            Intent intent = new Intent(ActivityLogin.this, MainActivity.class);
+            intent.putExtra("USER_EMAIL", account.getEmail()); // Pass the email to MainActivity
+            startActivity(intent);
+            finish(); // Optional
         } catch (ApiException e) {
             Toast.makeText(this, "Google sign in failed", Toast.LENGTH_SHORT).show();
         }

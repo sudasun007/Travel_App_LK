@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2; // Increment version for schema changes
     private static final String DATABASE_NAME = "UserManager.db";
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_ID = "id";
@@ -20,16 +20,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
 
-
     // Table name and columns for accommodation details
-    private static final String TABLE_ACCOMMODATIONS = "accommodations";
-    private static final String COLUMN_ACCOM_ID = "id";
-    private static final String COLUMN_ACCOM_NAME = "name";
-    private static final String COLUMN_ACCOM_LOCATION = "location";
-    private static final String COLUMN_ACCOM_DESCRIPTION = "description";
-    private static final String COLUMN_ACCOM_PRICE = "price";
+    public static final String TABLE_ACCOMMODATIONS = "accommodations";
+    public static final String COLUMN_ACCOM_ID = "id";
+    public static final String COLUMN_ACCOM_NAME = "name";
+    public static final String COLUMN_ACCOM_LOCATION = "location";
+    public static final String COLUMN_ACCOM_DESCRIPTION = "description";
+    public static final String COLUMN_ACCOM_PRICE = "price";
+    public static final String COLUMN_ACCOM_FROM_DATE = "from_date";
+    public static final String COLUMN_ACCOM_TO_DATE = "to_date";
 
-    // Create table SQL query
+    // Create table SQL query for users
     private static final String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_NAME + " TEXT,"
@@ -37,13 +38,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_PASSWORD + " TEXT"
             + ")";
 
-    // Create table SQL query
+    // Create table SQL query for accommodations
     private static final String CREATE_ACCOMMODATIONS_TABLE = "CREATE TABLE " + TABLE_ACCOMMODATIONS + "("
             + COLUMN_ACCOM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_ACCOM_NAME + " TEXT,"
             + COLUMN_ACCOM_LOCATION + " TEXT,"
             + COLUMN_ACCOM_DESCRIPTION + " TEXT,"
-            + COLUMN_ACCOM_PRICE + " TEXT"
+            + COLUMN_ACCOM_PRICE + " TEXT,"
+            + COLUMN_ACCOM_FROM_DATE + " TEXT,"
+            + COLUMN_ACCOM_TO_DATE + " TEXT"
             + ")";
 
     public DatabaseHelper(Context context) {
@@ -61,9 +64,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d("DatabaseHelper", "Upgrading database, dropping existing table");
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-        onCreate(db);
+        Log.d("DatabaseHelper", "Upgrading database, adding missing columns");
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + TABLE_ACCOMMODATIONS + " ADD COLUMN " + COLUMN_ACCOM_FROM_DATE + " TEXT;");
+            db.execSQL("ALTER TABLE " + TABLE_ACCOMMODATIONS + " ADD COLUMN " + COLUMN_ACCOM_TO_DATE + " TEXT;");
+        }
     }
 
     public void addUser(String name, String email, String password) {
