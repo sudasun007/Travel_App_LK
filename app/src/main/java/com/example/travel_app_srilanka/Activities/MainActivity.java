@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerview() {
         ArrayList<PopularDomain> items = new ArrayList<>();
-        items.add(new PopularDomain("Ruwanweli Maha Seya","Anuradhapura","The Ruwanwelisaya in Anuradhapura is a majestic stupa built in the 2nd century BCE by King Dutugemunu,"+
+        items.add(new PopularDomain("Ruwanweli Maha Seya","Anuradhapura, Ruwanweli Maha Seya","The Ruwanwelisaya in Anuradhapura is a majestic stupa built in the 2nd century BCE by King Dutugemunu,"+
                 "symbolizing profound Buddhist devotion and Sri Lanka's rich cultural heritage."  ,2,true,4.8,"pic1_1",true,1000));
-        items.add(new PopularDomain("Unawatuna Beach","Galle"," Unawatuna is a coastal town in Galle district of Sri Lanka.,"+
+        items.add(new PopularDomain("Unawatuna Beach","Galle, Unawatuna Beach"," Unawatuna is a coastal town in Galle district of Sri Lanka.,"+
                 "    Unawatuna is a major tourist attraction in Sri Lanka and known for its beach and corals." ,1,false,5,"pic2_2",false,2500));
-        items.add(new PopularDomain("Yala National Park","Hambantota, Monaragala ","Yala National Park (also known as Ruhuna National Park) is located in the south eastern region of Sri Lanka," +
+        items.add(new PopularDomain("Yala National Park","Hambantota, Monaragala,Yala National Park ","Yala National Park (also known as Ruhuna National Park) is located in the south eastern region of Sri Lanka," +
                 "and extends over two provinces of Hambantota district of southern province and Monaragala district in Uva province."  ,3,true,4.1,"pic3_3",true,30000));
 
 

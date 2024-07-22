@@ -20,7 +20,8 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:layout_below="@id/editTextName"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp"
+        android:enabled="false"/>
 
     <!-- Password EditText -->
     <EditText

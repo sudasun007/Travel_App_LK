@@ -20,6 +20,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
 
+
+    // Table name and columns for accommodation details
+    private static final String TABLE_ACCOMMODATIONS = "accommodations";
+    private static final String COLUMN_ACCOM_ID = "id";
+    private static final String COLUMN_ACCOM_NAME = "name";
+    private static final String COLUMN_ACCOM_LOCATION = "location";
+    private static final String COLUMN_ACCOM_DESCRIPTION = "description";
+    private static final String COLUMN_ACCOM_PRICE = "price";
+
     // Create table SQL query
     private static final String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -28,25 +37,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_PASSWORD + " TEXT"
             + ")";
 
+    // Create table SQL query
+    private static final String CREATE_ACCOMMODATIONS_TABLE = "CREATE TABLE " + TABLE_ACCOMMODATIONS + "("
+            + COLUMN_ACCOM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_ACCOM_NAME + " TEXT,"
+            + COLUMN_ACCOM_LOCATION + " TEXT,"
+            + COLUMN_ACCOM_DESCRIPTION + " TEXT,"
+            + COLUMN_ACCOM_PRICE + " TEXT"
+            + ")";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d("DatabaseHelper", "Creating database tables");
         // Create users table
         db.execSQL(CREATE_USERS_TABLE);
+        // Create accommodations table
+        db.execSQL(CREATE_ACCOMMODATIONS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        Log.d("DatabaseHelper", "Upgrading database, dropping existing table");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
-
-
         onCreate(db);
     }
-
 
     public void addUser(String name, String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -56,11 +74,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_EMAIL, email);
         values.put(COLUMN_PASSWORD, hashPassword(password)); // Hash the password
 
-
-        db.insert(TABLE_USERS, null, values);
+        long result = db.insert(TABLE_USERS, null, values);
+        Log.d("DatabaseHelper", "Inserted new user: " + result);
         db.close();
     }
-
 
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -73,42 +90,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int count = cursor.getCount();
         cursor.close();
 
-
         return count > 0;
     }
 
-
     public User getUser(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-        User user = null;
-
-        String[] columns = {COLUMN_NAME, COLUMN_EMAIL, COLUMN_PASSWORD};
-        String selection = COLUMN_EMAIL + " = ?";
-        String[] selectionArgs = {email};
-
-        Cursor cursor = db.query(TABLE_USERS, columns, selection, selectionArgs, null, null, null);
+        Cursor cursor = db.query(TABLE_USERS, new String[]{COLUMN_NAME, COLUMN_EMAIL, COLUMN_PASSWORD},
+                COLUMN_EMAIL + "=?", new String[]{email}, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            int nameIndex = cursor.getColumnIndex(COLUMN_NAME);
-            int emailIndex = cursor.getColumnIndex(COLUMN_EMAIL);
-            int passwordIndex = cursor.getColumnIndex(COLUMN_PASSWORD);
-
-            if (nameIndex != -1 && emailIndex != -1 && passwordIndex != -1) {
-                String name = cursor.getString(nameIndex);
-                String userEmail = cursor.getString(emailIndex);
-                String password = cursor.getString(passwordIndex);
-                user = new User(name, userEmail, password);
-            } else {
-                Log.e("DatabaseHelper", "Column not found in cursor");
-            }
-
+            User user = new User(
+                    cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
+                    cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD))
+            );
             cursor.close();
+            db.close();
+            return user;
         } else {
-            Log.e("DatabaseHelper", "No data found in cursor");
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+            return null; // or handle it accordingly
         }
-
-        db.close();
-        return user;
     }
 
     public boolean updateUserInfo(String email, String newName, String newPassword) {
@@ -122,10 +127,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return rowsAffected > 0;
     }
 
-
     public boolean deleteUser(String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         int rowsAffected = db.delete(TABLE_USERS, COLUMN_EMAIL + " = ?", new String[]{email});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    public boolean updateUserEmail(String oldEmail, String newEmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EMAIL, newEmail);
+
+        int rowsAffected = db.update(TABLE_USERS, values, COLUMN_EMAIL + " = ?", new String[]{oldEmail});
         db.close();
         return rowsAffected > 0;
     }
@@ -146,4 +160,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return null;
         }
     }
+
+    public Cursor getAllAccommodations() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_ACCOMMODATIONS, null, null, null, null, null, null);
+    }
+
 }

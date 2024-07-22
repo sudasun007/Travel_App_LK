@@ -1,5 +1,6 @@
 package com.example.travel_app_srilanka.Activities;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.travel_app_srilanka.R;
@@ -30,12 +32,11 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
         buttonUpdate = findViewById(R.id.buttonUpdate);
         buttonDelete = findViewById(R.id.buttonDelete);
 
-
         databaseHelper = new DatabaseHelper(this);
-
-
         loggedInUserEmail = getCurrentUserEmail();
 
+        // Load user info
+        loadUserInfo();
 
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,29 +48,25 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deletePersonalInfo();
+                confirmDeletePersonalInfo();
             }
         });
-
-
-        loadUserInfo();
     }
 
     private void loadUserInfo() {
-
         User user = databaseHelper.getUser(loggedInUserEmail);
         if (user != null) {
             editTextName.setText(user.getName());
             editTextEmail.setText(user.getEmail());
-            editTextPassword.setText(user.getPassword());
+            editTextPassword.setText(""); // Hide password
+        } else {
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void updatePersonalInfo() {
         String newName = editTextName.getText().toString();
-        String newEmail = editTextEmail.getText().toString();
         String newPassword = editTextPassword.getText().toString();
-
 
         boolean success = databaseHelper.updateUserInfo(loggedInUserEmail, newName, newPassword);
         if (success) {
@@ -79,16 +76,28 @@ public class EditPersonalInfoActivity extends AppCompatActivity {
         }
     }
 
-    private void deletePersonalInfo() {
+    private void confirmDeletePersonalInfo() {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Delete")
+                .setMessage("Are you sure you want to delete your account?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        deletePersonalInfo();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 
+    private void deletePersonalInfo() {
         boolean success = databaseHelper.deleteUser(loggedInUserEmail);
         if (success) {
             Toast.makeText(EditPersonalInfoActivity.this, "Delete successful", Toast.LENGTH_SHORT).show();
+            finish(); // Close the activity
         } else {
             Toast.makeText(EditPersonalInfoActivity.this, "Delete failed", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private String getCurrentUserEmail() {
         SharedPreferences preferences = getSharedPreferences("user_session", MODE_PRIVATE);

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.travel_app_srilanka.R;
 import android.content.SharedPreferences;
 
+
 public class ActivityProfile extends AppCompatActivity {
 
     @Override
@@ -23,12 +24,14 @@ public class ActivityProfile extends AppCompatActivity {
         Button backToMainBtn = findViewById(R.id.button5);
         Button logoutBtn = findViewById(R.id.button6);
 
+
         personalInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 startActivity(new Intent(ActivityProfile.this, EditPersonalInfoActivity.class));
             }
+
         });
 
         reviewBtn.setOnClickListener(new View.OnClickListener() {
@@ -41,9 +44,10 @@ public class ActivityProfile extends AppCompatActivity {
         bookingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(ActivityProfile.this, BookingDetailsActivity.class));
             }
         });
+
 
         backToMainBtn.setOnClickListener(new View.OnClickListener() {
             @Override

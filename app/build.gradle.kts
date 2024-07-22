@@ -44,4 +44,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation ("com.google.android.gms:play-services-location:18.0.0")
+
 }
