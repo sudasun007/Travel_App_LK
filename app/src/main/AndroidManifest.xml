@@ -21,10 +21,6 @@
         android:theme="@style/Theme.Travel_App_Srilanka"
         tools:targetApi="31">
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
-
         <!-- IntroActivity -->
         <activity
             android:name=".Activities.IntroActivity"
