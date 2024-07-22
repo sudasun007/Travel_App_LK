@@ -7,19 +7,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.travel_app_srilanka.Domains.PopularDomain;
 import com.example.travel_app_srilanka.R;
+import com.example.travel_app_srilanka.Activities.DatabaseHelper; // Adjust the package path as needed
+
 
 public class DetailActivity extends AppCompatActivity {
 
     private TextView titleTxt, locationTxt, bedTxt, guideTxt, wifiTxt, descriptionTxt, scoreTxt;
     private Button viewMoreBtn;
     private PopularDomain item;
-    private ImageView picImg, backBtm;
+    private ImageView picImg, backBtm,imageView10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,9 @@ public class DetailActivity extends AppCompatActivity {
 
         initView();
         setVariable();
+
+        DatabaseHelper dbHelper = new DatabaseHelper(this); // Create an instance
+
 
         // Add OnClickListener to locationTxt to start LocationDetailActivity
         locationTxt.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +61,17 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(DetailActivity.this, AccommodationFormActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        // Add OnClickListener to favBtn to store the location name to database
+        // Add OnClickListener to favBtn to store the location name to database
+        imageView10 = findViewById(R.id.imageView10);
+        imageView10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String locationName = locationTxt.getText().toString();
+                dbHelper.addFavouriteLocation(locationName); // Use the instance to call method
             }
         });
 
@@ -144,6 +161,19 @@ public class DetailActivity extends AppCompatActivity {
             // Optionally handle the case where no app is available
             // For example, show a Toast message or handle it as needed
         }
+    }
+
+    public void addToFavourite(View view) {
+        // Get the location name or other relevant details
+        // For example, from TextView or other sources in the layout
+        String imageView10 = "Location Name"; // Replace with actual value
+
+        // Add to favorites in the database
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        dbHelper.addFavouriteLocation(imageView10);
+
+        // Optionally, provide feedback to the user
+        Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
     }
 
 }

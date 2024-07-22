@@ -19,7 +19,7 @@ public class LocationListActivity extends AppCompatActivity {
         locationListLayout = findViewById(R.id.locationListLayout);
 
         // Sample location names
-        String[] locationNames = {"Location 1", "Location 2", "Location 3", "Location 4", "Location 5"};
+        String[] locationNames = {"Anuradhapura, Ruwanweli Maha Seya", "Galle, Unawatuna Beach", "NULL NULL", "NULL NULL", "NULL NULL"};
 
         // Add location names to the LinearLayout
         for (String location : locationNames) {
