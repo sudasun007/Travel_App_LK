@@ -30,6 +30,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ACCOM_FROM_DATE = "from_date";
     public static final String COLUMN_ACCOM_TO_DATE = "to_date";
 
+    private static final String TABLE_FAVOURITE_LOCATIONS = "favourite_locations";
+    private static final String COLUMN_LOCATION_NAME = "location_name";
+
     // Create table SQL query for users
     private static final String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS + "("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -60,6 +63,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USERS_TABLE);
         // Create accommodations table
         db.execSQL(CREATE_ACCOMMODATIONS_TABLE);
+
+        // Create favourite_locations table
+        String CREATE_FAVOURITE_LOCATIONS_TABLE = "CREATE TABLE " + TABLE_FAVOURITE_LOCATIONS + "("
+                + COLUMN_LOCATION_NAME + " TEXT PRIMARY KEY)";
+        db.execSQL(CREATE_FAVOURITE_LOCATIONS_TABLE);
     }
 
     @Override
@@ -69,6 +77,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE " + TABLE_ACCOMMODATIONS + " ADD COLUMN " + COLUMN_ACCOM_FROM_DATE + " TEXT;");
             db.execSQL("ALTER TABLE " + TABLE_ACCOMMODATIONS + " ADD COLUMN " + COLUMN_ACCOM_TO_DATE + " TEXT;");
         }
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVOURITE_LOCATIONS);
     }
 
     public void addUser(String name, String email, String password) {
@@ -169,6 +178,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllAccommodations() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.query(TABLE_ACCOMMODATIONS, null, null, null, null, null, null);
+    }
+
+    // Add a method to insert a favorite location
+    // Add a method to insert a favorite location
+    public void addFavouriteLocation(String locationName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_LOCATION_NAME, locationName);
+
+        // Insert the new row
+        db.insert(TABLE_FAVOURITE_LOCATIONS, null, values);
+        db.close();
     }
 
 }
