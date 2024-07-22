@@ -12,6 +12,7 @@ import com.example.travel_app_srilanka.Adapters.CategoryAdapter;
 import com.example.travel_app_srilanka.Adapters.PopularAdapter;
 import com.example.travel_app_srilanka.Domains.CategoryDomain;
 import com.example.travel_app_srilanka.Domains.PopularDomain;
+import com.example.travel_app_srilanka.LocationListActivity;
 import com.example.travel_app_srilanka.R;
 
 import java.util.ArrayList;
@@ -75,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
     }
     public void goToProfileActivity(View view) {
         Intent intent = new Intent(this, ActivityProfile.class);
+        startActivity(intent);
+    }
+
+    public void goToLocationList(View view) {
+        Intent intent = new Intent(this, LocationListActivity.class);
         startActivity(intent);
     }
 

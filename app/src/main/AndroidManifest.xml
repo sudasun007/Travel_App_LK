@@ -80,10 +80,7 @@
             android:exported="true"/>
 
         <activity android:name=".Activities.SettingsActivity" />
-
-
-
-
+        <activity android:name=".LocationListActivity" />
 
     </application>
 
